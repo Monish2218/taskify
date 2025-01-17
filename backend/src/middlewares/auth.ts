@@ -8,12 +8,14 @@ export const authenticateToken = (req: AuthRequest, res: Response, next: NextFun
   const token = req.headers["authorization"]?.split(" ")[1]; 
 
   if (!token) {
-    return res.status(401).json({ error: "Authentication Token Required" });
+    res.status(401).json({ error: "Authentication Token Required" });
+    return;
   }
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
-      return res.status(403).json({ error: "Invalid token" });
+      res.status(403).json({ error: "Invalid token" });
+      return;
     }
     req.user = user as { id: string; email: string };
     next();
