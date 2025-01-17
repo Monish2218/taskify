@@ -1,12 +1,25 @@
 import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/db";
+import cors from 'cors';
+import taskRoutes from "./routes/taskRoutes";
+import authRoutes from "./routes/authRoutes";
+import projectRoutes from "./routes/projectRoutes";
+
+dotenv.config();
+connectDB();
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+app.use(express.json());
+app.use(cors());
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/task', taskRoutes);
+
+const PORT = process.env.PORT ?? 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
