@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import UserModel from "../models/User";
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { AuthRequest } from "../types";
 
 export const register = async (req:Request, res:Response) : Promise<void>=>{
     try {
@@ -46,8 +47,21 @@ export const login = async (req:Request, res:Response) : Promise<void>=>{
         }
 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET ?? 'your-secret-key', {expiresIn: '1d'});
-        res.status(200).json({token});
+        res.status(200).json({token, user: {id: user._id, name: user.name, email: user.email, role: user.role}});
     } catch (error) {
         res.status(500).json({error: 'Error logging in'});
+    }
+}
+
+export const getUser = async (req:AuthRequest, res:Response) : Promise<void>=>{
+    try {
+        const user = await UserModel.findById(req.user?.id).select('-password');
+        if(!user){
+            res.status(400).json({error: 'User not found'});
+            return;
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({error: 'Error fetching User'});
     }
 }
