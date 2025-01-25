@@ -1,15 +1,24 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import Landing from "./pages/Landing";
+import { Header } from "./components/Layout/Header";
+import Footer from "./components/Layout/Footer";
+import Features from "./pages/Features";
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<h1>Welcome to Project Management SaaS</h1>} />
-        <Route path="/login" element={<h1>Login Page</h1>} />
-        <Route path="/register" element={<h1>Register Page</h1>} />
-        <Route path="/dashboard" element={<h1>Dashboard Page</h1>} />
-      </Routes>
-    </Router>
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/features" element={<Features />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
   );
 }
 
