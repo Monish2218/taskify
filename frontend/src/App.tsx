@@ -1,10 +1,19 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+
+import { Header } from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
+import ProtectedRoute from "./components/layout/ProtectedRoute";
+
 import Landing from "./pages/Landing";
-import { Header } from "./components/Layout/Header";
-import Footer from "./components/Layout/Footer";
 import Features from "./pages/Features";
 import RegisterPage from "./pages/Register";
 import LoginPage from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Tasks from "./pages/Tasks";
+import Projects from "./pages/Projects";
+import ProjectDetails from "./pages/ProjectDetails";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -17,6 +26,54 @@ function App() {
               <Route path="/features" element={<Features />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/tasks"
+                element={
+                  <ProtectedRoute>
+                    <Tasks />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/projects"
+                element={
+                  <ProtectedRoute>
+                    <Projects />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/projects/:id"
+                element={
+                  <ProtectedRoute>
+                    <ProjectDetails />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>

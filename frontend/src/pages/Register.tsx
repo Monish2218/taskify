@@ -1,7 +1,9 @@
 import { useNavigate, Link } from "react-router-dom"
+import { Check } from "lucide-react"
+
 import { RegisterForm } from "@/components/auth/RegisterForm"
 import { Button } from "@/components/ui/button"
-import { Check } from "lucide-react"
+
 import Github from "@/assets/github.svg"
 import Google from "@/assets/google.svg"
 

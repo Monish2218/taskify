@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom"
-import { Button } from "@/components/ui/button"
 import { LayoutDashboard, ListTodo, Users, Clock, Calendar, Bell, Shield, Zap } from "lucide-react"
+import { useAtomValue } from "jotai";
+import { Button } from "@/components/ui/button"
+import { userAtom } from "@/stores/authStore";
 
 const features = [
   {
@@ -49,6 +51,7 @@ const features = [
 ]
 
 export default function Features() {
+  const user = useAtomValue(userAtom);
   return (
     <div className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -60,16 +63,25 @@ export default function Features() {
             Discover how Taskify can help you and your team achieve more. Our comprehensive suite of features is
             designed to streamline your workflow and boost productivity.
           </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Link to="/register">
-              <Button size="lg">Get started</Button>
-            </Link>
-            <Link to="/login">
-              <Button variant="outline" size="lg">
-                Log in
-              </Button>
-            </Link>
-          </div>
+          {user ? (
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <Link to="/dashboard">
+                <Button size="lg">Get started</Button>
+              </Link>
+            </div>
+            ) : (
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <Link to="/register">
+                <Button size="lg">Get started</Button>
+              </Link>
+              <Link to="/login">
+                <Button variant="outline" size="lg">
+                  Log in
+                </Button>
+              </Link>
+            </div>
+        )}
+          
         </div>
 
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
