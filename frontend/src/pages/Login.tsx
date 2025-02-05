@@ -1,23 +1,29 @@
 import { useNavigate, Link } from "react-router-dom"
 import { Check } from "lucide-react"
-import { useAtom } from "jotai"
+import { useAtom, useAtomValue } from "jotai"
+import toast from "react-hot-toast"
 
 import { LoginForm } from "@/components/auth/LoginForm"
 import { Button } from "@/components/ui/button"
 import Github from "@/assets/github.svg"
 import Google from "@/assets/google.svg"
-import { loginAtom } from "@/stores/authStore"
+import { loginAtom, userAtom } from "@/stores/authStore"
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [, login] = useAtom(loginAtom);
+  const user = useAtomValue(userAtom);
+  if (user) {
+    navigate("/dashboard")
+  }
 
   const handleLogin = async (email: string, password: string) => {
     try {
       await login({email, password});
+      toast.success("Login successful");
       navigate("/dashboard")
     } catch (error) {
-      console.error("Login failed:", error)
+      toast.error(`Login failed: ${error}`);
     }
   }
 

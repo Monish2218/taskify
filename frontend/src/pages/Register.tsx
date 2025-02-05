@@ -1,21 +1,24 @@
 import { useNavigate, Link } from "react-router-dom"
 import { Check } from "lucide-react"
+import toast from "react-hot-toast"
 
 import { RegisterForm } from "@/components/auth/RegisterForm"
 import { Button } from "@/components/ui/button"
 
 import Github from "@/assets/github.svg"
 import Google from "@/assets/google.svg"
+import { authService } from "@/services/authService"
 
 export default function RegisterPage() {
   const navigate = useNavigate()
 
   const handleRegister = async (name: string, email: string, password: string) => {
     try {
-      console.log("Register successful",name, email, password)
-      navigate("/login")
+      await authService.register(name, email, password);
+      toast.success("Registration successful");
+      navigate("/login");
     } catch (error) {
-      console.error("Registration failed:", error)
+      toast.error(`Registration failed: ${error}`);
     }
   }
 

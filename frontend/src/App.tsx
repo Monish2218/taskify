@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 
 import { Header } from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
@@ -14,10 +14,13 @@ import Projects from "./pages/Projects";
 import ProjectDetails from "./pages/ProjectDetails";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import { Toaster } from "react-hot-toast";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
     <Router>
+      <Toaster />
         <div className="flex flex-col min-h-screen">
           <Header />
           <main className="flex-grow">
@@ -74,7 +77,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
           <Footer />
