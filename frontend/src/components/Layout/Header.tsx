@@ -15,13 +15,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { logoutAtom, userAtom } from "@/stores/authStore"
+import { authAtom, logoutAtom } from "@/stores/authStore"
 
 export const Header = () => {
-  const user = useAtomValue(userAtom);
+  const {user} = useAtomValue(authAtom);
   const [, logout] = useAtom(logoutAtom);
   const [isOpen, setIsOpen] = useState(false);
-
+  
   const toggleMenu = () => setIsOpen(!isOpen)
 
   return (

@@ -8,6 +8,9 @@ const TaskSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   dueDate: { type: Date },
+  createdAt: { type: Date, default: Date.now },
+  status: { type: String, enum: ["todo", "in-progress", "completed"], default: "todo" },
+  priority: { type: String, enum: ["low", "medium", "high"], default: "low" },
 });
 
 export default mongoose.model("Task", TaskSchema);

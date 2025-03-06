@@ -4,14 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
-interface Task {
-  id: string
-  title: string
-  status: "todo" | "in-progress" | "completed"
-  priority: "low" | "medium" | "high"
-  dueDate: string
-}
+import { Task } from "@/types"
 
 interface EditTaskModalProps {
   readonly task: Task

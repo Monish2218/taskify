@@ -1,16 +1,11 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { EditTaskModal } from "./EditTaskModal"
-
-interface Task {
-  id: string
-  title: string
-  status: "todo" | "in-progress" | "completed"
-  priority: "low" | "medium" | "high"
-  dueDate: string
-}
+import { Task } from "@/types"
+import { taskService } from "@/services/taskService"
 
 interface TaskListProps {
   readonly projectId?: string
@@ -18,35 +13,24 @@ interface TaskListProps {
 
 export function TaskList({ projectId }: TaskListProps) {
   console.log(projectId);
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: "1",
-      title: "Create wireframes",
-      status: "completed",
-      priority: "high",
-      dueDate: "2023-06-30",
-    },
-    {
-      id: "2",
-      title: "Develop landing page",
-      status: "in-progress",
-      priority: "medium",
-      dueDate: "2023-07-15",
-    },
-    {
-      id: "3",
-      title: "Write documentation",
-      status: "todo",
-      priority: "low",
-      dueDate: "2023-07-31",
-    },
-  ])
+  const [tasks, setTasks] = useState<Task[]>()
 
   const [editingTask, setEditingTask] = useState<Task | null>(null)
 
+  const {data} = useQuery({
+    queryKey: ['tasks'],
+    queryFn: taskService.getTasks,
+  })
+  
+  useEffect(() => {
+    if (data) {
+      setTasks(data);
+    }
+  }, [data]);
+
   const handleStatusChange = (taskId: string, completed: boolean) => {
     setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === taskId ? { ...task, status: completed ? "completed" : "todo" } : task)),
+      prevTasks?.map((task) => (task.id === taskId ? { ...task, status: completed ? "completed" : "todo" } : task)),
     )
   }
 
@@ -55,7 +39,7 @@ export function TaskList({ projectId }: TaskListProps) {
   }
 
   const handleDeleteTask = (taskId: string) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId))
+    setTasks((prevTasks) => prevTasks?.filter((task) => task.id !== taskId))
   }
 
   return (
@@ -71,7 +55,7 @@ export function TaskList({ projectId }: TaskListProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {tasks.map((task) => (
+          {tasks?.map((task) => (
             <TableRow key={task.id}>
               <TableCell>
                 <Checkbox
@@ -81,7 +65,7 @@ export function TaskList({ projectId }: TaskListProps) {
               </TableCell>
               <TableCell>{task.title}</TableCell>
               <TableCell>{task.priority}</TableCell>
-              <TableCell>{task.dueDate}</TableCell>
+              <TableCell>{new Date(task.dueDate as string).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</TableCell>
               <TableCell className="text-right">
                 <Button variant="ghost" size="sm" onClick={() => handleEditTask(task)}>
                   Edit
@@ -100,7 +84,7 @@ export function TaskList({ projectId }: TaskListProps) {
           isOpen={!!editingTask}
           onClose={() => setEditingTask(null)}
           onSave={(updatedTask) => {
-            setTasks((prevTasks) => prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)))
+            setTasks((prevTasks) => prevTasks?.map((task) => (task.id === updatedTask.id ? updatedTask : task)))
             setEditingTask(null)
           }}
         />

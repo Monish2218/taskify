@@ -4,21 +4,33 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { taskService } from "@/services/taskService"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 interface CreateTaskModalProps {
   readonly isOpen: boolean
   readonly onClose: () => void
 }
 
+type Priority = "low" | "medium" | "high" | undefined;
+
 export function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProps) {
   const [title, setTitle] = useState("")
-  const [priority, setPriority] = useState("")
+  const [priority, setPriority] = useState<Priority>()
   const [dueDate, setDueDate] = useState("")
+
+  const queryClient = useQueryClient();
+  
+  const { mutate } = useMutation({
+    mutationFn: taskService.createTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['tasks']});
+    }
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement task creation logic
-    console.log("Creating task:", { title, priority, dueDate })
+    mutate({title, priority, dueDate});
     onClose()
   }
 
@@ -35,7 +47,7 @@ export function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProps) {
           </div>
           <div>
             <Label htmlFor="priority">Priority</Label>
-            <Select value={priority} onValueChange={setPriority}>
+            <Select value={priority} onValueChange={(value) => setPriority(value as Priority)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select priority" />
               </SelectTrigger>

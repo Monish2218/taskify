@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { LayoutDashboard, ListTodo, Users, Clock, Calendar, Bell, Shield, Zap } from "lucide-react"
 import { useAtomValue } from "jotai";
 import { Button } from "@/components/ui/button"
-import { userAtom } from "@/stores/authStore";
+import { authAtom } from "@/stores/authStore";
 
 const features = [
   {
@@ -51,7 +51,7 @@ const features = [
 ]
 
 export default function Features() {
-  const user = useAtomValue(userAtom);
+  const {user} = useAtomValue(authAtom);
   return (
     <div className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">

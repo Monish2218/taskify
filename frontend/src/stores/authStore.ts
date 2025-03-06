@@ -3,7 +3,10 @@ import { atomWithStorage } from 'jotai/utils';
 import { User } from '../types';
 import { authService } from '@/services/authService';
 
-export const userAtom = atomWithStorage<User | null>('user', null);
+export const authAtom = atomWithStorage<{
+  token: string | null;
+  user: User | null;
+}>('auth', { token: null, user: null });
 
 export const loginAtom = atom(
   null,
@@ -12,9 +15,7 @@ export const loginAtom = atom(
       const response = await authService.login(email, password);
       const { user, token } = response.data;
       
-      localStorage.setItem('token', token);
-      set(userAtom, user);
-      
+      set(authAtom, {token: token, user: user});
       return user;
     } catch (error) {
       console.error('Login failed', error);
@@ -26,9 +27,9 @@ export const loginAtom = atom(
 export const logoutAtom = atom(
   null,
   (get, set) => {
-    localStorage.removeItem('token');
-    set(userAtom, null);
+    set(authAtom, { token: null, user: null });
+    window.location.href = '/login';
   }
 );
 
-export const isAuthenticatedAtom = atom((get) => get(userAtom) !== null);
+export const isAuthenticatedAtom = atom((get) => get(authAtom).user !== null);

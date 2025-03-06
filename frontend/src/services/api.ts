@@ -1,33 +1,26 @@
 import axios from 'axios';
-import { Project, Task } from '@/types';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const auth = JSON.parse(localStorage.getItem('auth') ?? '{}');
+  if (auth?.token) {
+    config.headers.Authorization = `Bearer ${auth.token}`;
   }
   return config;
 });
 
-export const projectService = {
-  getProjects: () => api.get('/projects'),
-  createProject: (project: Partial<Project>) => 
-    api.post('/projects', project),
-  getProjectDetails: (projectId: string) => 
-    api.get(`/projects/${projectId}`),
-};
-
-export const taskService = {
-  getTasks: (projectId?: string) => 
-    api.get('/tasks', { params: { projectId } }),
-  createTask: (task: Partial<Task>) => 
-    api.post('/tasks', task),
-  updateTaskStatus: (taskId: string, status: Task['status']) => 
-    api.patch(`/tasks/${taskId}/status`, { status }),
-};
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      localStorage.removeItem('auth');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error instanceof Error ? error : new Error(error));
+  }
+);
 
 export default api;
