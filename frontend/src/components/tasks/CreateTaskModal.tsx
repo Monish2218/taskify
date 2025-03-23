@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { taskService } from "@/services/taskService"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 interface CreateTaskModalProps {
   readonly isOpen: boolean
@@ -19,18 +17,8 @@ export function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProps) {
   const [priority, setPriority] = useState<Priority>()
   const [dueDate, setDueDate] = useState("")
 
-  const queryClient = useQueryClient();
-  
-  const { mutate } = useMutation({
-    mutationFn: taskService.createTask,
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['tasks']});
-    }
-  });
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    mutate({title, priority, dueDate});
     onClose()
   }
 
