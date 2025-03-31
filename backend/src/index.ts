@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./config/db";
+import connectDB from "./utils/dbConnect";
 import cors from 'cors';
 import taskRoutes from "./routes/taskRoutes";
 import authRoutes from "./routes/authRoutes";
