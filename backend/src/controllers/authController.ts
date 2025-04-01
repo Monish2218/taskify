@@ -1,8 +1,8 @@
 import { Request, Response } from "express"
-import UserModel from "../models/User";
+import UserModel from "../models/user.model";
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { AuthRequest } from "../types";
+import { AuthRequest } from "../schemas/user.schema";
 
 export const register = async (req:Request, res:Response) : Promise<void>=>{
     try {

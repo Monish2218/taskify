@@ -1,6 +1,6 @@
 import { Response } from "express"
-import { AuthRequest } from "../types";
-import ProjectModel from "../models/Project";
+import { AuthRequest } from "../schemas/user.schema";
+import ProjectModel from "../models/project.model";
 
 export const getProjects = async (req:AuthRequest, res:Response)=> {
     try {

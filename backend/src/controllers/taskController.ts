@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
-import Task from "../models/Task";
-import { AuthRequest } from "../types";
+import Task from "../models/task.model";
+import { AuthRequest } from "../schemas/user.schema";
 
 export const createTask = async(req: AuthRequest, res: Response) => {
     try {
