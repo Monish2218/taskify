@@ -9,22 +9,18 @@ export const userSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  body: z.object({
-    email: z.string({
-      required_error: 'Email is required',
-    }).email('Invalid email address'),
-    password: z.string({
-      required_error: 'Password is required',
-    }).min(8, 'Password must be at least 8 characters long'),
-  }),
+  email: z.string({
+    required_error: 'Email is required',
+  }).email('Invalid email address'),
+  password: z.string({
+    required_error: 'Password is required',
+  }).min(8, 'Password must be at least 8 characters long'),
 });
 
 export const registerSchema = loginSchema.extend({
-  body: loginSchema.shape.body.extend({
-    name: z.string({
-      required_error: 'Name is required',
-    }).min(2, 'Name must be at least 2 characters long'),
-  }),
+  name: z.string({
+    required_error: 'Name is required',
+  }).min(2, 'Name must be at least 2 characters long'),
 });
 
 export type User = z.infer<typeof userSchema>;

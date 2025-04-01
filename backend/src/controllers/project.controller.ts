@@ -1,6 +1,7 @@
 import { Response } from "express"
 import { AuthRequest } from "../schemas/user.schema";
 import ProjectModel from "../models/project.model";
+import { CreateProjectInput, UpdateProjectInput } from "../schemas/project.schema";
 
 export const getProjects = async (req:AuthRequest, res:Response)=> {
     try {
@@ -28,8 +29,8 @@ export const getProject = async(req: AuthRequest, res: Response)=>{
 
 export const createProject = async(req:AuthRequest, res:Response)=>{
     try {
-        const userId = req.user?.id;
-        const project = req.body;
+        const userId = req.user?.id as string;
+        const project : CreateProjectInput = req.body;
         project.userId = userId;
         const newProject = await ProjectModel.create(project);
         res.status(201).json(newProject);
@@ -41,7 +42,8 @@ export const createProject = async(req:AuthRequest, res:Response)=>{
 
 export const updateProject = async(req:AuthRequest, res:Response)=>{
     try {
-        const updatedProject = await ProjectModel.findByIdAndUpdate(req.params.id, req.body, {new:true});
+        const projectData : UpdateProjectInput = req.body;
+        const updatedProject = await ProjectModel.findByIdAndUpdate(req.params.id, projectData, {new:true});
         if(!updatedProject){
             res.status(404).json({message:"Project not found"});
             return;

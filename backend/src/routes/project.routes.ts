@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authenticateToken } from "../middlewares/auth";
 import validateRequest from "../middlewares/validateRequest";
-import { createProject, deleteProject, getProject, getProjects, updateProject } from "../controllers/projectController";
+import { createProject, deleteProject, getProject, getProjects, updateProject } from "../controllers/project.controller";
 import { createProjectSchema, updateProjectSchema } from "../schemas/project.schema";
 
 const router = Router();

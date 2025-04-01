@@ -2,16 +2,16 @@ import { Request, Response } from "express"
 import UserModel from "../models/user.model";
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { AuthRequest } from "../schemas/user.schema";
+import { AuthRequest, LoginInput, RegisterInput } from "../schemas/user.schema";
 
-export const register = async (req:Request, res:Response) : Promise<void>=>{
+export const register = async (req:Request<{}, {}, RegisterInput>, res:Response) : Promise<void>=>{
     try {
         const {name, email, password} = req.body;
         
         const user = await UserModel.findOne({email});
 
         if(user){
-            res.status(400).json({error: 'User already exists'});
+            res.status(409).json({error: 'User already exists'});
             return;
         }
 
@@ -30,11 +30,11 @@ export const register = async (req:Request, res:Response) : Promise<void>=>{
     
 }
 
-export const login = async (req:Request, res:Response) : Promise<void>=>{
+export const login = async (req:Request<{}, {}, LoginInput>, res:Response) : Promise<void>=>{
     try {
         const {email, password} = req.body;
 
-        const user = await UserModel.findOne({email});
+        const user = await UserModel.findOne({email}).select('+password');
         if(!user){
             res.status(400).json({error: 'User does not exist'});
             return;
@@ -45,7 +45,7 @@ export const login = async (req:Request, res:Response) : Promise<void>=>{
             res.status(400).json({error: 'Invalid password'});
             return;
         }
-
+        
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET ?? 'your-secret-key', {expiresIn: '1d'});
         res.status(200).json({token, user: {id: user._id, name: user.name, email: user.email, role: user.role}});
     } catch (error) {

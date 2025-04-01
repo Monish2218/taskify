@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authenticateToken } from "../middlewares/auth";
 import validateRequest from "../middlewares/validateRequest";
-import { createTask, deleteTask, getProjectTasks, getTask, getUserTasks, updateTask } from "../controllers/taskController";
+import { createTask, deleteTask, getProjectTasks, getTask, getUserTasks, updateTask } from "../controllers/task.controller";
 import { createTaskSchema, updateTaskSchema } from "../schemas/task.schema";
 
 const router = Router();
